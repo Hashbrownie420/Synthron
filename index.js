@@ -3,7 +3,7 @@ global.botStartTime = Date.now();
 const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const fs = require('fs');
 const path = require('path');
-const { delay } = require('./utils'); // Importiere die delay-Funktion aus der utils.js
+const { delay } = require('./utils');
 
 const ADMIN_GROUP_ID = '120363403067644626@g.us';
 const commands = new Map();
@@ -12,6 +12,13 @@ let botStartTime = null;
 // === Cooldown-Daten für jede Gruppe ===
 const groupCooldowns = {};
 const SPAM_COOLDOWN = 5000;  // 5 Sekunden Cooldown
+
+// === Blacklist für Lesebestätigungen ===
+const noReadChats = [
+    '491782102904@s.whatsapp.net', // <-- hier deine erste Nummer
+    '491726071134@s.whatsapp.net',
+    '4915739034434@s.whatsapp.net'  // <-- hier deine zweite Nummer
+];
 
 // === Funktion zum Laden des Präfixes aus der prefix.json ===
 function getPrefixForGroup(groupId) {
@@ -61,6 +68,11 @@ async function startBot() {
     sock.ev.on('messages.upsert', async ({ messages }) => {
         const msg = messages[0];
         if (!msg.message || msg.key.fromMe) return;
+
+        // Nur Lesebestätigung senden, wenn der Chat nicht auf der Ausschlussliste ist
+        if (!noReadChats.includes(msg.key.remoteJid)) {
+            await sock.readMessages([msg.key]);
+        }
 
         const groupId = msg.key.remoteJid;
         const prefix = getPrefixForGroup(groupId);
