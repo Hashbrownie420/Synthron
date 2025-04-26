@@ -1,0 +1,23 @@
+{
+  "requests": [
+    {
+      "id": 100,
+      "sender": "4915679587914",
+      "text": "Wie sehe ich alle Befehle?",
+      "status": "beantwortet"
+    },
+    {
+      "id": 101,
+      "sender": "4915679587914",
+      "text": "Wie kann ich im Leaderboard aufsteigen",
+      "status": "beantwortet"
+    },
+    {
+      "id": 102,
+      "sender": "4915679587914",
+      "text": "Wie lange dauert es bis der Bot fertig ist?",
+      "status": "beantwortet"
+    }
+  ],
+  "nextId": 103
+}

@@ -1,0 +1,23 @@
+const { delay } = require('../utils'); // oder './utils' wenn utils.js im selben Ordner ist
+
+const fs = require('fs');
+const path = require('path');
+
+module.exports = {
+    name: 'menu',
+    description: 'Zeigt eine Liste aller verfügbaren Befehle.\nBenutzung: *?menu*',
+    menu: 'Zeigt die Liste aller Befehle',
+    execute: async (sock, sender) => {
+        const commandFiles = fs.readdirSync(path.join(__dirname)).filter(file => file.endsWith('.js'));
+        let menuText = '📜 *Synthron Menü* 📜\n\n';
+        for (const file of commandFiles) {
+            const command = require(`./${file}`);
+            if (command.name) {
+                menuText += '━━━━━━━━━━━━━━━━━━━━\n',
+                menuText += `➡️ *?${command.name}* ➤ *${command.menu}*\n`;
+            }
+        }
+        await delay(1000)
+        await sock.sendMessage(sender, { text: menuText });
+    }
+};
