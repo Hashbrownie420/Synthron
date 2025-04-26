@@ -8,5 +8,12 @@
   "Shopsystem (Währung Smarties)",
   "Menü universal gleich anzeigbar machen",
   "HDF weiter ausbauen (Mehr Sprüche)",
-  "Leaderboard überarbeiten (Keine Erwähnungen mehr, da sie in anderen Gruppen angezeigt werden und dadurch Nummernleak)"
+  "Leaderboard überarbeiten (Keine Erwähnungen mehr, da sie in anderen Gruppen angezeigt werden und dadurch Nummernleak)",
+  "everyone Befehl (markiert alle Personen in einer Gruppe, am besten mit hidetag)",
+  "Usertodo Befehl (User können so Vorschläge für weitere Funktionen senden ohne das Team anschreiben zu müssen oder den Support zu schreiben)",
+  "Warnsystem",
+  "Kicksystem",
+  "dead Befehl \nSendet per Zufall einen von 100 Sprüchen wie der bot dich umbringt",
+  "Timeout Befehl (mute -> einzelne Person \n Timeout -> gesamte Gruppe)",
+  "Mute Befehl \n\nVerwendung: \n?mute enable @person [Zeit]\n\nLöscht eingehende Nachrichten"
 ]

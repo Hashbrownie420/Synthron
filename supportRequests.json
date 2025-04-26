@@ -17,7 +17,13 @@
       "sender": "4915679587914",
       "text": "Wie lange dauert es bis der Bot fertig ist?",
       "status": "beantwortet"
+    },
+    {
+      "id": 103,
+      "sender": "4915739034434",
+      "text": "Wie komme ich ins Team?",
+      "status": "beantwortet"
     }
   ],
-  "nextId": 103
+  "nextId": 104
 }
