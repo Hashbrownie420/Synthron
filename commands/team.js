@@ -154,7 +154,7 @@ module.exports = {
 
                 let text = '🗒️ *Team-Notizen:*\n\n';
                 for (const note of noteData.notes) {
-                    text += `#${note.id} ➤ ${note.text} _(von ${note.sender})_\n`;
+                    text += `#${note.id} ➤ ${note.text} _(von ${note.sender})_\n\n`;
                 }
 
                 return sock.sendMessage(from, { text });

@@ -48,7 +48,7 @@ module.exports = {
             await delay(1000);
             await sock.sendMessage(groupId, { text: `✅ Der Präfix für diese Gruppe wurde auf *${newPrefix}* gesetzt.` });
         } else if (subCommand === 'check') {
-            const groupPrefix = prefixData[groupId] || 'Kein Präfix gesetzt.';
+            const groupPrefix = prefixData[groupId] || 'Kein Präfix gesetzt.*\n*Es wird das Standard Präfix (?) genutzt.';
             await delay(1000);
             await sock.sendMessage(groupId, { text: `📋 Der aktuelle Präfix für diese Gruppe ist: *${groupPrefix}*` });
         } else {

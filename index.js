@@ -15,9 +15,8 @@ const SPAM_COOLDOWN = 5000;  // 5 Sekunden Cooldown
 
 // === Blacklist für Lesebestätigungen ===
 const noReadChats = [
-    '491782102904@s.whatsapp.net', // <-- hier deine erste Nummer
-    '491726071134@s.whatsapp.net',
-    '4915739034434@s.whatsapp.net'  // <-- hier deine zweite Nummer
+    '491782102904@s.whatsapp.net',
+    '491726071134@s.whatsapp.net'
 ];
 
 // === Funktion zum Laden des Präfixes aus der prefix.json ===
@@ -26,6 +25,14 @@ function getPrefixForGroup(groupId) {
     if (!fs.existsSync(filePath)) return '?';
     const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     return data[groupId] || '?';
+}
+
+// === Mute-System ===
+const muteFile = path.join(__dirname, 'mutes.json');
+// muteStore wird bei jedem Message-Upsert neu geladen, damit Änderungen durch commands/mute.js sofort gelten
+function loadMuteStore() {
+    if (!fs.existsSync(muteFile)) return {};
+    return JSON.parse(fs.readFileSync(muteFile, 'utf-8'));
 }
 
 // === Funktion zum Laden der Befehle ===
@@ -51,7 +58,7 @@ async function startBot() {
         printQRInTerminal: true,
     });
 
-    botStartTime = new Date().getTime();
+    botStartTime = Date.now();
 
     sock.ev.on('connection.update', async (update) => {
         if (update.connection === 'close') {
@@ -69,28 +76,47 @@ async function startBot() {
         const msg = messages[0];
         if (!msg.message || msg.key.fromMe) return;
 
-        // Nur Lesebestätigung senden, wenn der Chat nicht auf der Ausschlussliste ist
-        if (!noReadChats.includes(msg.key.remoteJid)) {
+        const chatId = msg.key.remoteJid;
+        const from = msg.key.participant || msg.key.remoteJid;
+
+        // 1) Mute-Check: lösche Nachricht, wenn gemutet
+        if (chatId.endsWith('@g.us')) {
+            const muteStore = loadMuteStore();
+            const groupMutes = muteStore[chatId] || {};
+            const expiry = groupMutes[from];
+            if (expiry !== undefined) {
+                if (expiry === null || expiry > Date.now()) {
+                    // Nachricht löschen und nicht weiter verarbeiten
+                    await sock.sendMessage(chatId, { delete: msg.key });
+                    return;
+                } else {
+                    // Mute abgelaufen → aus Store entfernen
+                    delete groupMutes[from];
+                    muteStore[chatId] = groupMutes;
+                    fs.writeFileSync(muteFile, JSON.stringify(muteStore, null, 2));
+                }
+            }
+        }
+
+        // 2) Lesebestätigung
+        if (!noReadChats.includes(chatId)) {
             await sock.readMessages([msg.key]);
         }
 
-        const groupId = msg.key.remoteJid;
-        const prefix = getPrefixForGroup(groupId);
+        // 3) Command-Handling
+        const prefix = getPrefixForGroup(chatId);
         const text = msg.message.conversation || msg.message.extendedTextMessage?.text;
         const sender = msg.key.remoteJid;
-
         const messageTimestamp = msg.messageTimestamp * 1000;
         if (messageTimestamp < botStartTime) return;
 
-        const now = Date.now();
-
         if (text && text.startsWith(prefix)) {
-            if (groupCooldowns[groupId] && now - groupCooldowns[groupId] < SPAM_COOLDOWN) {
-                console.log(`🚫 Cooldown aktiv für Gruppe ${groupId}`);
+            const now = Date.now();
+            if (groupCooldowns[chatId] && now - groupCooldowns[chatId] < SPAM_COOLDOWN) {
+                console.log(`🚫 Cooldown aktiv für Gruppe ${chatId}`);
                 return;
             }
-
-            groupCooldowns[groupId] = now;
+            groupCooldowns[chatId] = now;
 
             const fullArgs = text.slice(prefix.length).trim().split(/ +/);
             const baseCommand = fullArgs[0].toLowerCase();
@@ -103,20 +129,21 @@ async function startBot() {
             }
 
             console.log(`📥 Befehl empfangen: "${baseCommand}" von ${sender}`);
-
             try {
                 await command(sock, sender, args, msg);
                 console.log(`📤 Antwort gesendet an: ${sender}`);
             } catch (err) {
                 console.error(`❗ Fehler bei ${baseCommand}:`, err);
-
                 await sock.sendMessage(sender, { text: '❌ Es ist ein Fehler aufgetreten. Der Entwickler wurde benachrichtigt.' });
-
                 await sock.sendMessage(ADMIN_GROUP_ID, {
                     text: `❗ *Fehler bei Befehl:* ${baseCommand}\n👤 *Von:* ${sender}\n\n\`\`\`${err.stack || err}\`\`\``
                 });
             }
         }
+
+        // === Nosticker-Logik ===
+        const status = require('./commands/nosticker'); // Lade das nosticker-Modul
+        await status.onMessage(sock, msg); // Überprüfen und Sticker löschen, wenn deaktiviert
     });
 
 }
