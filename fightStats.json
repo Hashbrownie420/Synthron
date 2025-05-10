@@ -171,8 +171,8 @@
   },
   "4917680489806@s.whatsapp.net": {
     "wins": 1,
-    "fights": 2,
-    "points": 6
+    "fights": 3,
+    "points": 7
   },
   "4915566346734@s.whatsapp.net": {
     "wins": 1,
@@ -183,5 +183,10 @@
     "wins": 0,
     "fights": 1,
     "points": 1
+  },
+  "393479879260@s.whatsapp.net": {
+    "wins": 1,
+    "fights": 1,
+    "points": 5
   }
 }
