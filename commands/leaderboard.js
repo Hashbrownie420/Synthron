@@ -15,6 +15,26 @@ function getMedalEmoji(index) {
     return medals[index] || '🔹';
 }
 
+// Funktion zur Maskierung der Telefonnummern
+function maskPhoneNumber(number) {
+    const countryCode = number.slice(0, 2); // Ländervorwahl
+    const areaCode = number.slice(2, 5); // Vorwahl
+    const firstDigit = number.slice(5, 6); // erste Stelle nach der Vorwahl
+    const lastThreeDigits = number.slice(-3); // die letzten 3 Ziffern
+
+    return `+${countryCode} ${areaCode} ${firstDigit}xxxx${lastThreeDigits}`;
+}
+
+// Funktion zur Bestimmung der Flagge basierend auf der Nummer
+function getCountryFlag(number) {
+    const countryCodes = {
+        '49': '🇩🇪', '41': '🇨🇭', '43': '🇦🇹', '1': '🇺🇸', '44': '🇬🇧', '33': '🇫🇷'
+        // Weitere Länder kannst du hier hinzufügen
+    };
+    const countryCode = number.slice(0, 2);
+    return countryCodes[countryCode] || '🌍';
+}
+
 module.exports = {
     name: 'leaderboard',
     description: 'Zeigt die Top 10 Spieler basierend auf ihren Punkten\nBenutzung: *?leaderboard*',
@@ -36,21 +56,21 @@ module.exports = {
             return;
         }
 
-        // Leaderboard Text formatieren
         let text = `🏆 *Top 10 Spieler – Leaderboard (Punkte)* 🏆\n\n`;
 
         for (let i = 0; i < players.length; i++) {
             const player = players[i];
-            const mentionTag = `@${player.id.split('@')[0]}`;
             const medal = getMedalEmoji(i);
+            const phoneNumber = player.id.split('@')[0]; // Nummer ohne @s.whatsapp.net
+            const maskedPhone = maskPhoneNumber(phoneNumber); // Maskierte Telefonnummer
+            const flag = getCountryFlag(phoneNumber); // Flagge basierend auf der Vorwahl
 
-            text += `${medal} ${i + 1}. ${mentionTag}\n   🏅 ${player.points} Punkte | ${player.wins} Siege | ${player.fights} Kämpfe\n\n`;
+            text += `${medal} ${i + 1}. ${maskedPhone} ${flag}\n   🏅 ${player.points} Punkte | ${player.wins} Siege | ${player.fights} Kämpfe\n\n`;
         }
 
         await delay(1000);
         await sock.sendMessage(msg.key.remoteJid, {
-            text,
-            mentions: players.map(p => p.id)
+            text
         });
     }
 };

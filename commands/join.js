@@ -4,9 +4,9 @@ const { delay } = require('../utils');
 const { downloadMediaMessage } = require('@whiskeysockets/baileys');
 
 const joinRequestsFile = path.join(__dirname, '../joinRequests.json');
-const teamDataFile    = path.join(__dirname, '../botTeamData.json');
-const counterFile     = path.join(__dirname, '../joinIdCounter.json');
-const ADMIN_GROUP_ID  = '120363403067644626@g.us';
+const teamDataFile     = path.join(__dirname, '../botTeamData.json');
+const counterFile      = path.join(__dirname, '../joinIdCounter.json');
+const ADMIN_GROUP_ID   = '120363403067644626@g.us';
 
 function loadRequests() {
   if (!fs.existsSync(joinRequestsFile)) return {};
@@ -27,6 +27,13 @@ function getNextId() {
   counter.lastId++;
   fs.writeFileSync(counterFile, JSON.stringify(counter, null, 2));
   return counter.lastId.toString();
+}
+
+async function sendWelcomeMessage(sock, groupJid) {
+  const welcomeText = `📢 *Synthron ist der Gruppe beigetreten!*\n━━━━━━━━━━━━━━━━━━\n✨ Hallo zusammen! Ich bin *Synthron*, euer neuer Gruppenbegleiter.\nIch freue mich, ab jetzt hier zu sein und euch mit Infos, Spaß und Support zu unterstützen!\n\nTippt einfach *?menu*, um mein Hauptmenü anzuzeigen.\nAuf eine coole Zeit zusammen!\n\n━━━━━━━━━━━━━━━━━━\n> Verwende *?help (Befehl)*, um mehr Infos zur Benutzung eines Befehls zu erfahren.\nBeispiel:\n\n\`?help menu\``;
+
+  await delay(2000);
+  await sock.sendMessage(groupJid, { text: welcomeText });
 }
 
 module.exports = {
@@ -57,23 +64,22 @@ module.exports = {
         return sock.sendMessage(msg.key.remoteJid, { text: '❌ Nur Admins oder Owner dürfen Join-Anfragen akzeptieren.' });
       }
 
-      // Informiere den Anfragenden
       const userJid = `${request.number}@s.whatsapp.net`;
       await delay(1000);
       await sock.sendMessage(userJid, {
         text: `✅ Deine Join-Anfrage wurde *angenommen*! Der Bot wird der Gruppe nun beitreten.\n\n${request.groupLink}`
       });
 
-      // ➔ Bot automatisch der Gruppe beitreten lassen
       const inviteCode = request.groupLink.split('/').pop();
       try {
-        await sock.groupAcceptInvite(inviteCode);
+        const groupJid = await sock.groupAcceptInvite(inviteCode);
+        await delay(1000);
+        await sendWelcomeMessage(sock, groupJid); // Begrüßungsnachricht nach Beitritt
       } catch (e) {
         console.error('Fehler beim Beitreten der Gruppe:', e);
         await sock.sendMessage(msg.key.remoteJid, { text: '⚠️ Der Bot konnte der Gruppe nicht automatisch beitreten.' });
       }
 
-      // Bestätigung im Admin-Chat
       await delay(1000);
       await sock.sendMessage(msg.key.remoteJid, {
         text: `🟢 Join-Anfrage von *${request.number}* (ID: ${id}) wurde akzeptiert.`

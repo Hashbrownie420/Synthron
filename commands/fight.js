@@ -244,8 +244,8 @@ module.exports = {
 ${winner ? `🏆 *@${winner.split('@')[0]} gewinnt!*` : '⚖️ Unentschieden!'}
 
 📈 *Stats:*
-- @${player1.split('@')[0]}: ${stats[player1].wins} Siege | ${stats[player1].fights} Kämpfe | Punkte: ${stats[player1].points} (Erhielt ${pointsForRoundPlayer1})
-- @${player2.split('@')[0]}: ${stats[player2].wins} Siege | ${stats[player2].fights} Kämpfe | Punkte: ${stats[player2].points} (Erhielt ${pointsForRoundPlayer2})
+- @${player1.split('@')[0]}: ${stats[player1].wins} Siege | ${stats[player1].fights} Kämpfe | Punkte: ${stats[player1].points}\n (Erhielt ${pointsForRoundPlayer1})
+- @${player2.split('@')[0]}: ${stats[player2].wins} Siege | ${stats[player2].fights} Kämpfe | Punkte: ${stats[player2].points}\n (Erhielt ${pointsForRoundPlayer2})
 `;
 
         await delay(1000);

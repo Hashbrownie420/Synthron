@@ -2,10 +2,16 @@
   "Bansystem",
   "Levelsystem",
   "TicTacToe",
-  "Supportsystem",
   "Ownergruppen",
   "Q&A / KI",
   "beide mit Einsatz (Fight)",
   "Shopsystem (Währung Smarties)",
-  "Stickersteal"
+  "?car Befehl \n\nKategorien\n\nKat 1: Vroom Vroom\nKat 2: Tuned Vroom Vroom\nKat 3: Kleinwagen\nKat 4: Sportwagen\nKat 5: Geländewagen \nKat 6: Tuned Autos",
+  "Warnsystem (Mit Beleidigungen)",
+  "Admin give/remove Befehl",
+  "DSGVO bestätigen",
+  "Mehrere Botnummern / Hoster",
+  "Broadcast System",
+  "Info Befehl:\n\nBeinhaltet: \n- Anzahl Befehle in Gruppe\n- Anzahl Befehle in Privatchats\n- Anzahl Gruppen\n- Anzahl Privatnutzer\n- Letzte Update\n- Letzten 3 Änderungen\n- Letzter Neustart",
+  "Werbung Befehl\n\nJede Gruppe kann einen Werbungstext setzen, diesen kann man zurücksetzen fragt man diesen Text per Befehl ab sendet es den Einladungstext der Gruppe"
 ]

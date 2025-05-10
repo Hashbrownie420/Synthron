@@ -1,3 +1,19 @@
 {
-  "notes": []
+  "notes": [
+    {
+      "id": 1,
+      "text": "Broadcast: Funktioniert noch nicht (Lädt Chats noch nicht, liegt vermutlich daran, dass noch in index.js noch was geändert werden muss)",
+      "sender": "4915739034434"
+    },
+    {
+      "id": 2,
+      "text": "Hoster: \n\nHeute dransetzen, wenn funktioniert evtl Hoster und Teamler suchen",
+      "sender": "4915739034434"
+    },
+    {
+      "id": 3,
+      "text": "add Welcome:\nBug:\nSendet keine Willkommensnachricht wenn Gruppe beigetreten wird",
+      "sender": "4915739034434"
+    }
+  ]
 }
