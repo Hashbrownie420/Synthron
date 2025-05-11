@@ -14,6 +14,11 @@
       "id": 3,
       "text": "add Welcome:\nBug:\nSendet keine Willkommensnachricht wenn Gruppe beigetreten wird",
       "sender": "4915739034434"
+    },
+    {
+      "id": 4,
+      "text": "?regeln überarbeiten",
+      "sender": "491728853747"
     }
   ]
 }

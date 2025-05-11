@@ -46,7 +46,7 @@ module.exports = {
 
         menuText += 'ℹ️ Schreibe *?help [Befehl]* für Details zu einem Befehl.';
 
-        await delay(1000);
+        await delay();
         await sock.sendMessage(sender, { text: menuText });
     }
 };

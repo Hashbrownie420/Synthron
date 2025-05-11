@@ -10,7 +10,7 @@ module.exports = {
 
         // Wenn keine Argumente (Text) übergeben wurden
         if (args.length === 0) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(sender, { text: '❗ Du musst einen Text eingeben!' });
             return;
         }
@@ -20,13 +20,13 @@ module.exports = {
         const specialCharRegex = /[^a-zA-Z0-9\s]/; // Erlaubt nur Buchstaben, Zahlen und Leerzeichen
 
         if (specialCharRegex.test(firstChar)) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(sender, { text: '❌ Das erste Zeichen darf kein Sonderzeichen sein!' });
             return;
         }
 
         // Echo der Nachricht
-        await delay(1000);
+        await delay();
         await sock.sendMessage(sender, { text: text });
     }
 };

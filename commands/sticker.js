@@ -3,6 +3,7 @@ const { downloadMediaMessage } = require('@whiskeysockets/baileys');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 const path = require('path');
+const { delay } = require("../utils");
 
 module.exports = {
   name: 'sticker',
@@ -95,6 +96,7 @@ module.exports = {
 
     } catch (e) {
       console.error('Fehler beim Sticker:', e);
+	  await delay();
       await sock.sendMessage(sender, { text: '❌ Fehler beim Erstellen des Stickers.' });
     }
   }

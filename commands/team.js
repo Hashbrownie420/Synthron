@@ -40,12 +40,14 @@ module.exports = {
         const noteData = loadJson(NOTES_FILE);
 
         if (!subCommand) {
+			await delay();
             return sock.sendMessage(from, { text: '❗ *Benutze z. B.* `?team add [nummer] [rolle]`' });
         }
 
         // === TEAM ADD ===
         if (subCommand === 'add') {
             if (!isOwner(senderNum)) {
+				await delay();
                 return sock.sendMessage(from, { text: '🚫 *Nur ein Bot-Owner darf Teammitglieder hinzufügen!*' });
             }
 
@@ -53,26 +55,31 @@ module.exports = {
             const role = args[2];
 
             if (!number || !role) {
+				await delay();
                 return sock.sendMessage(from, { text: '❗ Nutzung: `?team add [Nummer] [Rolle]`' });
             }
 
             if (!isValidNumber(number)) {
+				await delay();
                 return sock.sendMessage(from, { text: '❌ *Ungültige Nummer!*' });
             }
 
             if (!VALID_ROLES.includes(role)) {
+				await delay();
                 return sock.sendMessage(from, { text: '⚠️ *Erlaubte Rollen:* Owner, Admin, Supporter.' });
             }
 
             teamData[number] = role;
             saveJson(DATA_PATH, teamData);
 
+			await delay();
             return sock.sendMessage(from, { text: `✅ *${number}* wurde als *${role}* hinzugefügt.` });
         }
 
         // === TEAM REMOVE ===
         if (subCommand === 'remove') {
             if (!isOwner(senderNum)) {
+				await delay();
                 return sock.sendMessage(from, { text: '🚫 *Nur ein Bot-Owner darf Teammitglieder entfernen!*' });
             }
 
@@ -80,15 +87,18 @@ module.exports = {
             if (!number) return sock.sendMessage(from, { text: '❗ Nutzung: `?team remove [Nummer]`' });
 
             if (!isValidNumber(number)) {
+				await delay();
                 return sock.sendMessage(from, { text: '❌ *Ungültige Nummer!*' });
             }
 
             if (!teamData[number]) {
+				await delay();
                 return sock.sendMessage(from, { text: `⚠️ *${number}* ist kein Teammitglied.` });
             }
 
             delete teamData[number];
             saveJson(DATA_PATH, teamData);
+			await delay();
             return sock.sendMessage(from, { text: `🗑️ *${number}* wurde entfernt.` });
         }
 
@@ -98,14 +108,17 @@ module.exports = {
             if (!number) return sock.sendMessage(from, { text: '❗ Nutzung: `?team check [Nummer]`' });
 
             if (!isValidNumber(number)) {
+				await delay();
                 return sock.sendMessage(from, { text: '❌ *Ungültige Nummer!*' });
             }
 
             const role = teamData[number];
             if (!role) {
+				await delay();
                 return sock.sendMessage(from, { text: `ℹ️ *${number}* ist kein Teammitglied.` });
             }
 
+			await delay();
             return sock.sendMessage(from, { text: `👤 *${number}* ist im Team als: *${role}*` });
         }
 
@@ -118,6 +131,7 @@ module.exports = {
             for (const num of keys) {
                 list += `➤ *${num}* ➝ ${teamData[num]}\n`;
             }
+			await delay();
             return sock.sendMessage(from, { text: list });
         }
 
@@ -127,6 +141,7 @@ module.exports = {
             const senderRole = teamData[senderNum];
 
             if (!senderRole && !isOwner(senderNum)) {
+				await delay();
                 return sock.sendMessage(from, { text: '🚫 *Nur Teammitglieder dürfen Team-Notizen verwenden.*' });
             }
 
@@ -143,12 +158,14 @@ module.exports = {
                 });
 
                 saveJson(NOTES_FILE, noteData);
+				await delay();
                 return sock.sendMessage(from, { text: `✅ Notiz #${newId} gespeichert.` });
             }
 
             // === NOTE LIST ===
             if (action === 'list') {
                 if (noteData.notes.length === 0) {
+					await delay();
                     return sock.sendMessage(from, { text: '📭 *Keine Team-Notizen vorhanden.*' });
                 }
 
@@ -157,6 +174,7 @@ module.exports = {
                     text += `#${note.id} ➤ ${note.text} _(von ${note.sender})_\n\n`;
                 }
 
+				await delay();
                 return sock.sendMessage(from, { text });
             }
 
@@ -170,6 +188,7 @@ module.exports = {
 
                 const note = noteData.notes[index];
                 if (note.sender !== senderNum && !isOwner(senderNum)) {
+					await delay();
                     return sock.sendMessage(from, { text: '🚫 *Du darfst diese Notiz nicht löschen.*' });
                 }
 
@@ -177,6 +196,7 @@ module.exports = {
                 noteData.notes.forEach((n, i) => n.id = i + 1);
                 saveJson(NOTES_FILE, noteData);
 
+				await delay();
                 return sock.sendMessage(from, { text: `🗑️ *Notiz #${noteId} wurde gelöscht. IDs wurden neu nummeriert.*` });
             }
 
@@ -184,6 +204,7 @@ module.exports = {
         }
 
         // === UNBEKANNT ===
+		await delay();
         return sock.sendMessage(from, { text: '❓ *Unbekannter Subbefehl.* Nutze `add`, `remove`, `check`, `list`, `note`' });
     }
 };

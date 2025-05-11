@@ -10,13 +10,13 @@ module.exports = {
         const text = args.join(' ');
 
         if (!text) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(sender, { text: '❗ Du musst eine Nachricht eingeben!' });
             return;
         }
 
         if (!sender.endsWith('@g.us')) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(sender, { text: '❗ Dieser Befehl funktioniert nur in Gruppen!' });
             return;
         }
@@ -30,7 +30,7 @@ module.exports = {
         });
 
         if (!isAdmin) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(sender, { text: '❌ Du musst ein Admin sein, um diesen Befehl zu benutzen!' });
             return;
         }
@@ -41,7 +41,7 @@ module.exports = {
 
         const messageText = `Nachricht von *${senderName}*:\n\n${text}`;
 
-        await delay(1000);
+        await delay();
         await sock.sendMessage(sender, {
             text: messageText,
             mentions: mentions,

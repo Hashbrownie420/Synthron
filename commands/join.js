@@ -56,16 +56,16 @@ module.exports = {
       const id = args[1];
       const request = requests[id];
       if (!request) {
-        await delay(1000);
+        await delay();
         return sock.sendMessage(msg.key.remoteJid, { text: '❌ Keine Join-Anfrage mit dieser ID gefunden.' });
       }
       if (!teamData[senderNum] || (teamData[senderNum] !== 'Admin' && teamData[senderNum] !== 'Owner')) {
-        await delay(1000);
+        await delay();
         return sock.sendMessage(msg.key.remoteJid, { text: '❌ Nur Admins oder Owner dürfen Join-Anfragen akzeptieren.' });
       }
 
       const userJid = `${request.number}@s.whatsapp.net`;
-      await delay(1000);
+      await delay();
       await sock.sendMessage(userJid, {
         text: `✅ Deine Join-Anfrage wurde *angenommen*! Der Bot wird der Gruppe nun beitreten.\n\n${request.groupLink}`
       });
@@ -73,14 +73,14 @@ module.exports = {
       const inviteCode = request.groupLink.split('/').pop();
       try {
         const groupJid = await sock.groupAcceptInvite(inviteCode);
-        await delay(1000);
+        await delay();
         await sendWelcomeMessage(sock, groupJid); // Begrüßungsnachricht nach Beitritt
       } catch (e) {
         console.error('Fehler beim Beitreten der Gruppe:', e);
         await sock.sendMessage(msg.key.remoteJid, { text: '⚠️ Der Bot konnte der Gruppe nicht automatisch beitreten.' });
       }
 
-      await delay(1000);
+      await delay();
       await sock.sendMessage(msg.key.remoteJid, {
         text: `🟢 Join-Anfrage von *${request.number}* (ID: ${id}) wurde akzeptiert.`
       });
@@ -95,19 +95,19 @@ module.exports = {
       const id = args[1];
       const request = requests[id];
       if (!request) {
-        await delay(1000);
+        await delay();
         return sock.sendMessage(msg.key.remoteJid, { text: '❌ Keine Join-Anfrage mit dieser ID gefunden.' });
       }
       if (!teamData[senderNum] || (teamData[senderNum] !== 'Admin' && teamData[senderNum] !== 'Owner')) {
-        await delay(1000);
+        await delay();
         return sock.sendMessage(msg.key.remoteJid, { text: '❌ Nur Admins oder Owner dürfen Join-Anfragen ablehnen.' });
       }
 
       const userJid = `${request.number}@s.whatsapp.net`;
-      await delay(1000);
+      await delay();
       await sock.sendMessage(userJid, { text: `❌ Deine Join-Anfrage wurde *abgelehnt*.` });
 
-      await delay(1000);
+      await delay();
       await sock.sendMessage(msg.key.remoteJid, {
         text: `🔴 Join-Anfrage von *${request.number}* (ID: ${id}) wurde abgelehnt.`
       });
@@ -120,25 +120,25 @@ module.exports = {
     // ─── List ─────────────────────────────────────────────────────────────────
     if (subCommand === 'list') {
       if (!teamData[senderNum] || (teamData[senderNum] !== 'Admin' && teamData[senderNum] !== 'Owner')) {
-        await delay(1000);
+        await delay();
         return sock.sendMessage(msg.key.remoteJid, { text: '❌ Nur Admins oder Owner dürfen Join-Anfragen einsehen.' });
       }
       const keys = Object.keys(requests);
       if (keys.length === 0) {
-        await delay(1000);
+        await delay();
         return sock.sendMessage(msg.key.remoteJid, { text: '📭 Keine offenen Join-Anfragen.' });
       }
       const list = keys
         .map(id => `🆔 *ID:* ${id}\n👤 *Nummer:* ${requests[id].number}\n🖇️ *Gruppenlink:* ${requests[id].groupLink}`)
         .join('\n\n\n');
-      await delay(1000);
+      await delay();
       return sock.sendMessage(msg.key.remoteJid, { text: `📋 *Offene Join-Anfragen:*\n\n${list}` });
     }
 
     // ─── Neue Join-Anfrage ────────────────────────────────────────────────────
     const groupLink = args[0];
     if (!groupLink || !groupLink.startsWith('https://chat.whatsapp.com/')) {
-      await delay(1000);
+      await delay();
       return sock.sendMessage(msg.key.remoteJid, { text: '❗ Benutzung: *?join [Gruppenlink]*' });
     }
 
@@ -146,12 +146,12 @@ module.exports = {
     requests[id] = { number: senderNum, groupLink };
     saveRequests(requests);
 
-    await delay(1000);
+    await delay();
     await sock.sendMessage(sender, {
       text: `✅ Deine Anfrage wurde erfolgreich gesendet!\n\n🆔 *Anfrage-ID:* ${id}`
     });
 
-    await delay(1000);
+    await delay();
     await sock.sendMessage(ADMIN_GROUP_ID, {
       text:
         `📥 *Neue Join-Anfrage!*\n\n` +

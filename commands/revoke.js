@@ -10,7 +10,7 @@ module.exports = {
 
         // Sicherstellen, dass es eine Gruppe ist
         if (!from.endsWith('@g.us')) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(from, { text: '❌ Dieser Befehl kann nur in Gruppen verwendet werden.' });
             return;
         }
@@ -21,13 +21,13 @@ module.exports = {
             const newCode = await sock.groupInviteCode(from);
             const newLink = `https://chat.whatsapp.com/${newCode}`;
 
-            await delay(1000);
+            await delay();
             await sock.sendMessage(from, {
                 text: `♻️ *Gruppenlink wurde zurückgesetzt!*\n🔗 Neuer Link:\n${newLink}`
             });
         } catch (err) {
             console.error('Fehler beim Zurücksetzen des Gruppenlinks: Bot ist kein Admin!');
-            await delay(1000);
+            await delay();
             await sock.sendMessage(from, {
                 text: '❌ Fehler beim Zurücksetzen des Links. Ist der Bot Admin?'
             });

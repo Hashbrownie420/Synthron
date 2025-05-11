@@ -4,7 +4,7 @@ const path = require('path');
 
 // Verzögerung (falls schon vorhanden)
 function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, 400));
 }
 
 // === Spieler-Registrierungssystem ===

@@ -17,6 +17,7 @@ module.exports = {
 
     // Nur in Gruppen zulassen
     if (!chatId.endsWith('@g.us')) {
+	  await delay();
       return sock.sendMessage(chatId, { text: '❌ Dieser Befehl funktioniert nur in Gruppen!' }, { quoted: msg });
     }
 
@@ -44,7 +45,7 @@ module.exports = {
 
     // Erlaubnis-Check: echte Gruppen-Admin ODER Bot-Owner/Team-Admin
     if (!isGroupAdmin && role !== 'Owner' && role !== 'Admin') {
-      await delay(500);
+      await delay();
       return sock.sendMessage(
         chatId,
         { text: '❌ Nur Gruppen-Admins oder Bot-Owner/Team-Admins dürfen das Timeout setzen!' },
@@ -55,7 +56,7 @@ module.exports = {
     // Sub-Command prüfen
     const sub = args[0]?.toLowerCase();
     if (sub !== 'enable' && sub !== 'disable') {
-      await delay(500);
+      await delay();
       return sock.sendMessage(
         chatId,
         { text: '❗ Benutzung: *?timeout enable* oder *?timeout disable*' },
@@ -67,13 +68,14 @@ module.exports = {
     try {
       // announcement = nur Admins dürfen schreiben; not_announcement = alle dürfen schreiben
       await sock.groupSettingUpdate(chatId, restrict ? 'announcement' : 'not_announcement');
-      await delay(500);
+      await delay();
       const reply = restrict
         ? '🔇 Timeout aktiviert: Nur Admins dürfen jetzt schreiben.'
         : '🔊 Timeout deaktiviert: Jeder darf wieder schreiben.';
       await sock.sendMessage(chatId, { text: reply }, { quoted: msg });
     } catch (e) {
       console.error('Fehler beim Ändern der Gruppen-Einstellung', e);
+	  await delay();
       await sock.sendMessage(chatId, { text: '⚠️ Konnte das Timeout nicht ändern.' }, { quoted: msg });
     }
   }

@@ -36,6 +36,7 @@ module.exports = {
   async execute(sock, sender, args, msg) {
     const chatId = msg.key.remoteJid;
     if (!chatId.endsWith('@g.us')) {
+	  await delay();
       return sock.sendMessage(chatId, { text: '❌ Nur in Gruppen!' }, { quoted: msg });
     }
 
@@ -58,6 +59,7 @@ module.exports = {
     const role = teamData[senderNum]; // "Owner"|"Admin"
 
     if (!isGroupAdmin && role!=='Owner' && role!=='Admin') {
+	  await delay();
       return sock.sendMessage(chatId, { text: '❌ Nur Gruppen-Admins oder Bot-Owner/Team-Admins dürfen das!' }, { quoted: msg });
     }
 
@@ -69,6 +71,7 @@ module.exports = {
       const mentions = msg.message.extendedTextMessage.contextInfo.mentionedJid||[];
       const target = mentions[0];
       if (!target) {
+		await delay();
         return sock.sendMessage(chatId, { text: '❗ Markiere per @ jemanden, den du muten willst.' }, { quoted: msg });
       }
       let expiry = null;
@@ -80,8 +83,10 @@ module.exports = {
       mutes[chatId][target] = expiry;      // null = unendlich
       saveMutes(mutes);
       if (expiry) {
+		await delay();
         await sock.sendMessage(chatId, { text: `🤫 <@${target.split('@')[0]}> gemutet für ${args[2]}.` }, { quoted: msg, contextInfo:{mentionedJid:[target]}});
       } else {
+		await delay();
         await sock.sendMessage(chatId, { text: `🤫 <@${target.split('@')[0]}> unendlich gemutet.` }, { quoted: msg, contextInfo:{mentionedJid:[target]}});
       }
     }
@@ -91,9 +96,11 @@ module.exports = {
       if (!target) return sock.sendMessage(chatId, { text: '❗ Markiere per @ jemanden, dessen Mute du aufheben willst.' }, { quoted: msg });
       delete mutes[chatId][target];
       saveMutes(mutes);
+	  await delay();
       await sock.sendMessage(chatId, { text: `🔊 <@${target.split('@')[0]}> wurde entmutet.` }, { quoted: msg, contextInfo:{mentionedJid:[target]}});
     }
     else {
+	  await delay();
       await sock.sendMessage(chatId, { text: '❗ Benutzung: ?mute enable @user [Zeit] oder ?mute disable @user' }, { quoted: msg });
     }
   }

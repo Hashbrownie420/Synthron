@@ -14,7 +14,7 @@ module.exports = {
         const responseTime = end - start;
 
         // Antwort mit Reaktionszeit aktualisieren
-        await delay(1000);
+        await delay();
         await sock.sendMessage(sender, {
             text: `Antwortzeit: *${responseTime}ms*`
         }, { quoted: sentMsg });

@@ -158,7 +158,7 @@ module.exports = {
         const player2 = mentions[0];
 
         if (!player2) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(msg.key.remoteJid, { text: '❗ Bitte erwähne jemanden zum Kämpfen: *?fight @user*' });
             return;
         }
@@ -248,7 +248,7 @@ ${winner ? `🏆 *@${winner.split('@')[0]} gewinnt!*` : '⚖️ Unentschieden!'}
 - @${player2.split('@')[0]}: ${stats[player2].wins} Siege | ${stats[player2].fights} Kämpfe | Punkte: ${stats[player2].points}\n (Erhielt ${pointsForRoundPlayer2})
 `;
 
-        await delay(1000);
+        await delay();
         await sock.sendMessage(msg.key.remoteJid, {
             text: msgText,
             mentions: [player1, player2]

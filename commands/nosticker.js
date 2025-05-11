@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { menu } = require('./join');
+const { delay } = require("../utils");
 
 // Pfad zur Datei, in der der Status des Befehls gespeichert wird
 const statusFilePath = path.join(__dirname, 'nosticker_status.json');
@@ -37,31 +38,37 @@ module.exports = {
         });
 
         if (!isAdmin) {
+			await delay();
             await sock.sendMessage(groupId, { text: '❌ Du musst ein Admin sein, um den Befehl auszuführen!' });
             return;
         }
 
         if (args[0] === 'enable') {
             if (status.enabled) {
+				await delay();
                 await sock.sendMessage(groupId, { text: '✅ Sticker sind bereits deaktiviert.' });
                 return;
             }
 
             status.enabled = true;
             saveStatus(status);
+			await delay();
             await sock.sendMessage(groupId, { text: '✅ Sticker wurden deaktiviert.' });
 
         } else if (args[0] === 'disable') {
             if (!status.enabled) {
+				await delay();
                 await sock.sendMessage(groupId, { text: '✅ Sticker sind bereits aktiviert.' });
                 return;
             }
 
             status.enabled = false;
             saveStatus(status);
+			await delay();
             await sock.sendMessage(groupId, { text: '✅ Sticker wurden aktiviert.' });
 
         } else {
+			await delay();
             await sock.sendMessage(groupId, { text: '❌ Ungültige Option. Benutze *enable* oder *disable*.' });
         }
     },
@@ -74,6 +81,7 @@ module.exports = {
         if (status.enabled && msg.message?.stickerMessage) {
             
             // Löschen des Stickers
+			await delay();
             await sock.sendMessage(groupId, { delete: msg.key });
         }
     }

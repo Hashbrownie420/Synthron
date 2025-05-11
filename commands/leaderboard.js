@@ -17,22 +17,25 @@ function getMedalEmoji(index) {
 
 // Funktion zur Maskierung der Telefonnummern
 function maskPhoneNumber(number) {
-    const countryCode = number.slice(0, 2); // Ländervorwahl
-    const areaCode = number.slice(2, 5); // Vorwahl
-    const firstDigit = number.slice(5, 6); // erste Stelle nach der Vorwahl
-    const lastThreeDigits = number.slice(-3); // die letzten 3 Ziffern
-
-    return `+${countryCode} ${areaCode} ${firstDigit}xxxx${lastThreeDigits}`;
+    const masked = number.slice(0, -4).replace(/\d/g, 'X') + number.slice(-4); // Zeigt nur die letzten 4 Ziffern an
+    return masked;
 }
 
 // Funktion zur Bestimmung der Flagge basierend auf der Nummer
 function getCountryFlag(number) {
+    // Mapping der Ländervorwahlen zu Flaggen-Emojis
     const countryCodes = {
-        '49': '🇩🇪', '41': '🇨🇭', '43': '🇦🇹', '1': '🇺🇸', '44': '🇬🇧', '33': '🇫🇷'
-        // Weitere Länder kannst du hier hinzufügen
+        '49': '🇩🇪', // Deutschland
+        '41': '🇨🇭', // Schweiz
+        '43': '🇦🇹', // Österreich
+        '1': '🇺🇸', // USA (Beispiel)
+        '44': '🇬🇧', // Großbritannien (Beispiel)
+        '33': '🇫🇷', // Frankreich (Beispiel)
+        // Füge hier weitere Länder und deren Vorwahlen hinzu
     };
-    const countryCode = number.slice(0, 2);
-    return countryCodes[countryCode] || '🌍';
+
+    const countryCode = number.slice(0, 2); // Holen der Vorwahl (erste zwei Ziffern)
+    return countryCodes[countryCode] || '🌍'; // Standard-Flagge, wenn keine Übereinstimmung
 }
 
 module.exports = {
@@ -50,25 +53,36 @@ module.exports = {
             .slice(0, 10);
 
         if (players.length === 0) {
+			await delay();
             await sock.sendMessage(msg.key.remoteJid, {
                 text: 'ℹ️ Noch keine Spieler auf dem Leaderboard!'
             });
             return;
         }
 
+        // Leaderboard Text formatieren
         let text = `🏆 *Top 10 Spieler – Leaderboard (Punkte)* 🏆\n\n`;
 
         for (let i = 0; i < players.length; i++) {
             const player = players[i];
             const medal = getMedalEmoji(i);
-            const phoneNumber = player.id.split('@')[0]; // Nummer ohne @s.whatsapp.net
-            const maskedPhone = maskPhoneNumber(phoneNumber); // Maskierte Telefonnummer
+            const phoneNumber = player.id.split('@')[0]; // Nur Nummer ohne @s.whatsapp.net
+            const maskedPhone = maskPhoneNumber(phoneNumber); // Maskierte Nummer
             const flag = getCountryFlag(phoneNumber); // Flagge basierend auf der Vorwahl
 
-            text += `${medal} ${i + 1}. ${maskedPhone} ${flag}\n   🏅 ${player.points} Punkte | ${player.wins} Siege | ${player.fights} Kämpfe\n\n`;
+            // Abfrage des echten Namens mit getProfile
+            try {
+                const profile = await sock.getProfile(phoneNumber + '@s.whatsapp.net'); // Holt das Profil des Kontakts
+                const userName = profile.pushName || "Unbekannt"; // Wenn kein Name vorhanden ist, dann "Unbekannt"
+
+                text += `${medal} ${i + 1}. ${userName} ${flag}\n   🏅 ${player.points} Punkte | ${player.wins} Siege | ${player.fights} Kämpfe\n\n`;
+            } catch (error) {
+                console.error('Fehler beim Abrufen des Profils:', error);
+                text += `${medal} ${i + 1}. Unbekannter Benutzer ${flag}\n   🏅 ${player.points} Punkte | ${player.wins} Siege | ${player.fights} Kämpfe\n\n`;
+            }
         }
 
-        await delay(1000);
+        await delay();
         await sock.sendMessage(msg.key.remoteJid, {
             text
         });

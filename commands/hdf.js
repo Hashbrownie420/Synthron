@@ -1,3 +1,5 @@
+const { delay } = require("../utils");
+
 // dsgvo.js
 module.exports = {
     name: 'hdf',
@@ -9,6 +11,7 @@ module.exports = {
 Das ist das einzige was dir einfällt? Mein Gott halt doch selbst die Fresse.
 Ich hoffe du trittst auf einen Legostein mein lieber. `;
 
+		await delay();
         await sock.sendMessage(sender, {
             text: hdfText
         });

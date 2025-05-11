@@ -36,7 +36,7 @@ module.exports = {
 
         const teamData = loadTeamData();
         if (!isOwner(senderNum, teamData)) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(from, { text: '❌ Nur Teammitglieder mit der Rolle *Owner* dürfen das ToDo-System nutzen!' });
             return;
         }
@@ -44,7 +44,7 @@ module.exports = {
         const subCommand = args[0];
 
         if (!subCommand) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(from, {
                 text: 'ℹ️ *ToDo-Befehle:*\n' +
                       '➕ *?todo add [Text]* – Neuen Eintrag hinzufügen\n' +
@@ -60,21 +60,21 @@ module.exports = {
         if (subCommand === 'add') {
             const text = args.slice(1).join(' ');
             if (!text) {
-                await delay(1000);
+                await delay();
                 await sock.sendMessage(from, { text: '❗ Bitte gib einen ToDo-Text ein: *?todo add [Text]*' });
                 return;
             }
 
             todos.push(text);
             saveTodos(todos);
-            await delay(1000);
+            await delay();
             await sock.sendMessage(from, { text: `✅ *ToDo hinzugefügt:* ${text}` });
         }
 
         // === LIST ===
         else if (subCommand === 'list') {
             if (todos.length === 0) {
-                await delay(1000);
+                await delay();
                 await sock.sendMessage(from, { text: '📭 *Die ToDo-Liste ist aktuell leer.*' });
                 return;
             }
@@ -85,7 +85,7 @@ module.exports = {
             });
             list += '━━━━━━━━━━━━━━━━━━\nℹ️ Nutze *?todo remove [Nummer]* zum Entfernen.';
 
-            await delay(1000);
+            await delay();
             await sock.sendMessage(from, { text: list });
         }
 
@@ -93,20 +93,20 @@ module.exports = {
         else if (subCommand === 'remove') {
             const id = parseInt(args[1]);
             if (isNaN(id) || id < 1 || id > todos.length) {
-                await delay(1000);
+                await delay();
                 await sock.sendMessage(from, { text: '❌ Ungültige Nummer! Nutze z. B. *?todo remove 2*' });
                 return;
             }
 
             const removed = todos.splice(id - 1, 1);
             saveTodos(todos);
-            await delay(1000);
+            await delay();
             await sock.sendMessage(from, { text: `❌ *Entfernt:* ${removed[0]}` });
         }
 
         // === UNBEKANNT ===
         else {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(from, {
                 text: '❓ Unbekannter Subbefehl. Gültige Optionen:\n*add*, *list*, *remove*'
             });

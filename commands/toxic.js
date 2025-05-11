@@ -1,5 +1,6 @@
 const { description } = require("./cringe");
 const { category } = require("./sticker");
+const { delay } = require("../utils");
 
 const toxicMap = {
     0: '0% – Dieser Mensch heilt toxische Beziehungen allein mit seiner Anwesenheit.',
@@ -140,6 +141,7 @@ const toxicMap = {
       const percent = Math.floor(Math.random() * 101);
       const text = toxicMap[percent] || `${percent}% toxisch – Beschreibung fehlt. Vielleicht ein neues Level?`;
   
+	  await delay();
       await sock.sendMessage(sender, {
         text: `☣️ *Toxizitäts-Scan*\n@${targetJid.split('@')[0]} ist heute bei *${text}*`,
         mentions: [targetJid]

@@ -54,7 +54,7 @@ module.exports = {
 
         // === Überprüfen, ob requests als Array vorliegt ===
         if (!Array.isArray(supportData.requests)) {
-            await delay(1000);
+            await delay();
             return sock.sendMessage(from, { text: '❗ Es ist ein Fehler aufgetreten. Bitte versuche es später noch einmal.' });
         }
 
@@ -64,21 +64,21 @@ module.exports = {
             const responseText = args.slice(2).join(' ');
 
             if (!requestId || !responseText) {
-                await delay(1000);
+                await delay();
                 return sock.sendMessage(from, { text: '❗ Nutzung: `?support answer [ID] [Antwort]`' });
             }
 
             // Überprüfen, ob der Sender mindestens die Rolle Supporter, Admin oder Owner hat
             const senderRole = teamData[senderNum];
             if (!senderRole || (senderRole !== 'Supporter' && senderRole !== 'Admin' && senderRole !== 'Owner')) {
-                await delay(1000);
+                await delay();
                 return sock.sendMessage(from, { text: '🚫 *Nur Teammitglieder mit den Rollen Supporter, Admin oder Owner dürfen Anfragen beantworten.*' });
             }
 
             // Anfrage in den Support-Daten finden
             const request = supportData.requests.find(r => r.id === requestId && r.status === 'offen');
             if (!request) {
-                await delay(1000);
+                await delay();
                 return sock.sendMessage(from, { text: '❌ Anfrage nicht gefunden oder bereits geschlossen.' });
             }
 
@@ -88,10 +88,10 @@ module.exports = {
 
             // Antwort in die Antwort-Gruppe senden
             const answerMessage = `🔧 *Antwort auf Support-Anfrage (ID: ${requestId})*\n\n\n*Anliegen:* ${request.text}\n\n*Antwort:* ${responseText}\n\n\n*Beantwortet von:* ${senderNum}`;
-            await delay(1000);
+            await delay();
             sock.sendMessage(ANSWER_GROUP_ID, { text: answerMessage });
 
-            await delay(1000);
+            await delay();
             return sock.sendMessage(from, { text: `✅ Deine Antwort wurde gespeichert und an die Antwortgruppe gesendet.` });
         }
 
@@ -100,12 +100,12 @@ module.exports = {
             // Überprüfen, ob der Sender mindestens die Rolle Supporter, Admin oder Owner hat
             const senderRole = teamData[senderNum];
             if (!senderRole || (senderRole !== 'Supporter' && senderRole !== 'Admin' && senderRole !== 'Owner')) {
-                await delay(1000);
+                await delay();
                 return sock.sendMessage(from, { text: '🚫 *Nur Teammitglieder mit den Rollen Supporter, Admin oder Owner dürfen offene Anfragen anzeigen.*' });
             }
 
             if (supportData.requests.length === 0) {
-                await delay(1000);
+                await delay();
                 return sock.sendMessage(from, { text: '📭 *Keine offenen Anfragen.*' });
             }
 
@@ -117,11 +117,11 @@ module.exports = {
             });
 
             if (text === '📋 *Offene Support-Anfragen:*\n\n') {
-                await delay(1000);
+                await delay();
                 return sock.sendMessage(from, { text: '📭 *Keine offenen Anfragen.*' });
             }
 
-            await delay(1000);
+            await delay();
             return sock.sendMessage(from, { text });
         }
 
@@ -130,16 +130,16 @@ module.exports = {
             // Überprüfen, ob der Sender mindestens die Rolle Supporter, Admin oder Owner hat
             const senderRole = teamData[senderNum];
             if (!senderRole || (senderRole !== 'Supporter' && senderRole !== 'Admin' && senderRole !== 'Owner')) {
-                await delay(1000);
+                await delay();
                 return sock.sendMessage(from, { text: '🚫 *Nur Teammitglieder mit den Rollen Supporter, Admin oder Owner dürfen Anfragen schließen.*' });
             }
 
             const requestId = parseInt(args[1]);
-            await delay(1000);
+            await delay();
             if (!requestId) return sock.sendMessage(from, { text: '❗ Nutzung: `?support close [ID]`' });
 
             const index = supportData.requests.findIndex(r => r.id === requestId && r.status === 'offen');
-            await delay(1000);
+            await delay();
             if (index === -1) return sock.sendMessage(from, { text: '❌ Anfrage nicht gefunden oder bereits geschlossen.' });
 
             const closedRequest = supportData.requests[index];
@@ -147,19 +147,19 @@ module.exports = {
             saveJson(SUPPORT_FILE, supportData);
 
             // Nachricht an den Anfragensteller senden, dass die Anfrage geschlossen wurde
-            await delay(1000);
+            await delay();
             sock.sendMessage(closedRequest.sender + '@s.whatsapp.net', { 
                 text: `❗ Deine Support-Anfrage (ID: ${requestId}) wurde leider geschlossen und wird nicht beantwortet.` 
             });
 
-            await delay(1000);
+            await delay();
             return sock.sendMessage(from, { text: `✅ Anfrage #${requestId} wurde geschlossen und der Anfragensteller informiert.` });
         } 
 
         // === Neue Support-Anfrage (Wenn kein Subbefehl) ===
         const supportText = args.join(' ');
         if (!supportText) {
-            await delay(1000);
+            await delay();
             return sock.sendMessage(from, { text: '❗ Bitte gib deine Anfrage an.' });
         }
 
@@ -176,10 +176,10 @@ module.exports = {
 
         // Nachricht an die Teamgruppe senden
         const supportMessage = `🔧 *Neue Support-Anfrage* (ID: ${newRequest.id})\n\n*Anliegen:* ${newRequest.text}\n*Anfrage von:* ${newRequest.sender}`;
-        await delay(1000);
+        await delay();
         sock.sendMessage(TEAM_GROUP_ID, { text: supportMessage });
 
-        await delay(1000);
+        await delay();
         return sock.sendMessage(from, { text: `✅ Deine Anfrage wurde gespeichert.\nID: ${newRequest.id}\n\nSobald die Anfrage bearbeitet wurde, findest du Sie hier:\nhttps://chat.whatsapp.com/CWjGbXu5qdEDnfdogoaJM3` });
     }
 };

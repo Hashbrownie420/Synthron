@@ -16,6 +16,7 @@ module.exports = {
 
     // Nur in Gruppen zulassen
     if (!chatId.endsWith('@g.us')) {
+	  await delay();
       return sock.sendMessage(chatId, { text: '❌ Dieser Befehl funktioniert nur in Gruppen!' }, { quoted: msg });
     }
 
@@ -43,7 +44,7 @@ module.exports = {
 
     // 4) Erlaubnis-Check: echte Gruppen-Admin ODER Bot-Owner/Team-Admin
     if (!isGroupAdmin && role !== 'Owner' && role !== 'Admin') {
-      await delay(500);
+      await delay();
       return sock.sendMessage(
         chatId,
         { text: '❌ Nur Gruppen-Admins oder Bot-Owner/Team-Admins dürfen mich aus der Gruppe schicken!' },
@@ -52,7 +53,7 @@ module.exports = {
     }
 
     // 5) Bestätigung an die Gruppe
-    await delay(500);
+    await delay();
     await sock.sendMessage(chatId, { text: '👋 Ich verlasse die Gruppe auf Wunsch der Admins.' }, { quoted: msg });
 
     // 6) Bot verlässt die Gruppe

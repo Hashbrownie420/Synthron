@@ -56,7 +56,7 @@ module.exports = {
         if (args[0] === 'reset') {
             const senderNum = senderId.split('@')[0];
             if (!isTeamMemberWithRole(senderNum)) {
-                await delay(1000);
+                await delay();
                 await sock.sendMessage(msg.key.remoteJid, {
                     text: '❌ Nur Teammitglieder mit der Rolle *Admin* oder höher dürfen die Statistiken zurücksetzen!'
                 });
@@ -64,7 +64,7 @@ module.exports = {
             }
 
             saveStats({});
-            await delay(1000);
+            await delay();
             await sock.sendMessage(msg.key.remoteJid, {
                 text: '✅ Alle Kampfstatistiken wurden erfolgreich zurückgesetzt!'
             });
@@ -78,7 +78,7 @@ module.exports = {
             const mentionTag = `@${target.split('@')[0]}`;
             const rank = getRank(stats, target);
 
-            await delay(1000);
+            await delay();
             await sock.sendMessage(msg.key.remoteJid, {
                 text: getStatsText(mentionTag, userStats.wins, userStats.fights, userStats.points, rank),
                 mentions: [target]
@@ -90,7 +90,7 @@ module.exports = {
         const selfStats = stats[senderId];
 
         if (!selfStats) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(msg.key.remoteJid, {
                 text: 'ℹ️ Du hast bisher noch keine Kämpfe absolviert!'
             });
@@ -100,7 +100,7 @@ module.exports = {
         const mentionTag = `@${senderId.split('@')[0]}`;
         const rank = getRank(stats, senderId);
 
-        await delay(1000);
+        await delay();
         await sock.sendMessage(msg.key.remoteJid, {
             text: getStatsText(mentionTag, selfStats.wins, selfStats.fights, selfStats.points, rank),
             mentions: [senderId]

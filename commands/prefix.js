@@ -24,7 +24,7 @@ module.exports = {
         });
 
         if (!isAdmin) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(groupId, { text: '❌ Du musst ein Admin sein, um den Präfix zu ändern!' });
             return;
         }
@@ -37,7 +37,7 @@ module.exports = {
         if (subCommand === 'set') {
             const newPrefix = args[1];
             if (!newPrefix) {
-                await delay(1000);
+                await delay();
                 await sock.sendMessage(groupId, { text: '❗ Bitte gib einen neuen Präfix an. Beispiel: *?prefix set !*' });
                 return;
             }
@@ -45,14 +45,14 @@ module.exports = {
             prefixData[groupId] = newPrefix;
             savePrefixData(prefixData);
 
-            await delay(1000);
+            await delay();
             await sock.sendMessage(groupId, { text: `✅ Der Präfix für diese Gruppe wurde auf *${newPrefix}* gesetzt.` });
         } else if (subCommand === 'check') {
             const groupPrefix = prefixData[groupId] || 'Kein Präfix gesetzt.*\n*Es wird das Standard Präfix (?) genutzt.';
-            await delay(1000);
+            await delay();
             await sock.sendMessage(groupId, { text: `📋 Der aktuelle Präfix für diese Gruppe ist: *${groupPrefix}*` });
         } else {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(groupId, {
                 text: '❗ Unbekannter Befehl. Benutze *?prefix set [Präfix]* oder *?prefix check*.'
             });

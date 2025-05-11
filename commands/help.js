@@ -12,7 +12,7 @@ module.exports = {
     execute: async (sock, sender, args) => {
         const commandName = args[0]?.toLowerCase();
         if (!commandName) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(sender, { text: 'Bitte gib einen Befehl an, z. B. *?help echo*' });
             return;
         }
@@ -20,7 +20,7 @@ module.exports = {
         const commandPath = path.join(__dirname, `${commandName}.js`);
 
         if (!fs.existsSync(commandPath)) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(sender, { text: `❌ Der Befehl *${commandName}* existiert nicht.` });
             return;
         }
@@ -28,7 +28,7 @@ module.exports = {
         const command = require(commandPath);
         const helpText = command.description || 'Keine Beschreibung verfügbar.';
 
-        await delay(1000);
+        await delay();
         await sock.sendMessage(sender, {
             text: `ℹ️ *Hilfe zu ?${commandName}*\n\n${helpText}`
         });

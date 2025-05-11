@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { delay } = require("../utils");
 const path = require('path');
 
 const notesFile = path.join(__dirname, '../notes.json'); // Pfad zur JSON-Datei
@@ -29,6 +30,7 @@ module.exports = {
             const userNotes = notesData[senderNum]?.notes || [];
 
             if (userNotes.length === 0) {
+				await delay();
                 await sock.sendMessage(msg.key.remoteJid, { text: '❌ Du hast noch keine Notizen.' });
                 return;
             }
@@ -38,12 +40,14 @@ module.exports = {
                 notesList += `\n${note.id}. ${note.text}`; // Zeige jede Notiz an
             });
 
+			await delay();
             await sock.sendMessage(msg.key.remoteJid, { text: notesList });
         } else if (args[0] === 'remove') {
             // Entfernt eine Notiz anhand der ID
             const noteId = parseInt(args[1], 10);
 
             if (isNaN(noteId)) {
+				await delay();
                 await sock.sendMessage(msg.key.remoteJid, { text: '❗ Ungültige Notiz-ID. Bitte gib eine gültige Zahl ein.' });
                 return;
             }
@@ -52,6 +56,7 @@ module.exports = {
             const noteIndex = userNotes.findIndex(note => note.id === noteId);
 
             if (noteIndex === -1) {
+				await delay();
                 await sock.sendMessage(msg.key.remoteJid, { text: '❌ Keine Notiz mit dieser ID gefunden.' });
                 return;
             }
@@ -70,11 +75,13 @@ module.exports = {
             // Speichern der geänderten Notizen
             saveNotes(notesData);
 
+			await delay();
             await sock.sendMessage(msg.key.remoteJid, { text: `✅ Deine Notiz mit ID ${noteId} wurde gelöscht.` });
         } else if (args[0] && args[0] !== 'list' && args[0] !== 'remove') {
             // Erstelle eine Notiz, wenn keine anderen Befehle ausgeführt werden
             const noteText = args.join(' ');
             if (!noteText) {
+				await delay();
                 await sock.sendMessage(msg.key.remoteJid, { text: '❗ Benutzung: ?note <deine Notiz>' });
                 return;
             }
@@ -90,8 +97,10 @@ module.exports = {
             notesData[senderNum].notes.push(newNote);
             saveNotes(notesData);
 
+			await delay();
             await sock.sendMessage(msg.key.remoteJid, { text: `✅ Deine Notiz wurde hinzugefügt: "${noteText}"` });
         } else {
+			await delay();
             await sock.sendMessage(msg.key.remoteJid, { text: '❗ Benutzung: ?note list, ?note remove <id> oder ?note <deine Notiz>' });
         }
     }

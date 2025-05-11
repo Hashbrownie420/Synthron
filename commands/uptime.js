@@ -25,7 +25,7 @@ module.exports = {
 `⏱ *Bot Uptime:* ${days}d ${hours}h ${minutes}m ${seconds}s
 🕒 *Gestartet am:* ${startTimeFormatted}`;
 
-        await delay(1000);
+        await delay();
         await sock.sendMessage(from, { text: message });
     }
 };

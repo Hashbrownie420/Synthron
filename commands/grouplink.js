@@ -11,7 +11,7 @@ module.exports = {
 
         // Prüfen, ob es sich um eine Gruppe handelt
         if (!from.endsWith('@g.us')) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(from, { text: '❌ Dieser Befehl funktioniert nur in Gruppen.' });
             return;
         }
@@ -20,13 +20,13 @@ module.exports = {
             const groupCode = await sock.groupInviteCode(from);
             const inviteLink = `https://chat.whatsapp.com/${groupCode}`;
 
-            await delay(1000);
+            await delay();
             await sock.sendMessage(from, {
                 text: `🔗 *Einladungslink der Gruppe:*\n${inviteLink}`
             });
         } catch (err) {
             console.error('Fehler beim Abrufen des Gruppenlinks:', err);
-            await delay(1000);
+            await delay();
             await sock.sendMessage(from, {
                 text: '❌ Fehler beim Abrufen des Gruppenlinks. Ist der Bot Admin?'
             });

@@ -1,4 +1,5 @@
 const { description, category } = require("./sticker");
+const { delay } = require('../utils');
 
 const cringeMap = {
     0: '0% Cringe: Du bist ein echter Profi, kein Cringe hier!',
@@ -139,6 +140,7 @@ const cringeMap = {
       const percent = Math.floor(Math.random() * 101);
       const text = cringeMap[percent] || `${percent}% cringe – Beschreibung fehlt. Vielleicht ein neues Level?`;
   
+	  await delay();
       await sock.sendMessage(sender, {
         text: `😬 *Cringe-Scan*\n@${targetJid.split('@')[0]} ist heute bei *${text}*`,
         mentions: [targetJid]

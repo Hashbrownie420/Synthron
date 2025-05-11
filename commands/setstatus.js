@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { delay } = require("../utils");
 const path = require('path');
 
 // === Pfad zu den Teamdaten ===
@@ -22,19 +23,23 @@ module.exports = {
         const senderRole = teamData[senderNum];
 
         if (senderRole !== 'Owner') {
+			await delay();
             return sock.sendMessage(from, { text: '🚫 *Nur ein Team-Owner darf den Status ändern!*' });
         }
 
         const newStatus = args.join(' ');
         if (!newStatus) {
+			await delay();
             return sock.sendMessage(from, { text: '❗ Nutzung: `?setstatus [Text]`' });
         }
 
         try {
             await sock.updateProfileStatus(newStatus);
+			await delay();
             await sock.sendMessage(from, { text: `✅ *Status erfolgreich geändert zu:* "${newStatus}"` });
         } catch (err) {
             console.error('Fehler beim Ändern des Status:', err);
+			await delay();
             await sock.sendMessage(from, { text: '❌ *Fehler beim Ändern des Status.*' });
         }
     }

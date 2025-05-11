@@ -14,6 +14,7 @@ module.exports = {
     const chatId = msg.key.remoteJid;
 
     if (!chatId.endsWith('@g.us')) {
+		await delay();
       return sock.sendMessage(chatId, { text: '❌ Dieser Befehl funktioniert nur in Gruppen!' }, { quoted: msg });
     }
 
@@ -37,7 +38,7 @@ module.exports = {
     const role = teamData[senderNum];
 
     if (!isGroupAdmin && role !== 'Owner' && role !== 'Admin') {
-      await delay(500);
+      await delay();
       return sock.sendMessage(
         chatId,
         { text: '❌ Nur Gruppen-Admins oder Bot-Owner/Team-Admins dürfen diesen Befehl nutzen.' },
@@ -82,7 +83,7 @@ module.exports = {
         mentions: [mentioned]
       }, { quoted: msg });
 
-      await delay(1000);
+      await delay();
       try {
         await sock.sendMessage(mentioned, {
           text: `⚠️ Du wurdest aus der Gruppe *${meta.subject}* entfernt.\n\n📝 *Grund:* ${grund}`

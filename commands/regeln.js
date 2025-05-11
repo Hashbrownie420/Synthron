@@ -25,12 +25,14 @@ module.exports = {
 
         if (subCommand === 'set') {
             if (!isAdmin) {
+				await delay();
                 await sock.sendMessage(groupId, { text: '❌ Nur Gruppenadmins können Regeln setzen.' });
                 return;
             }
 
             const customRules = args.slice(1).join(' ');
             if (!customRules) {
+				await delay();
                 await sock.sendMessage(groupId, { text: '❗ Bitte gib die neuen Regeln an. Beispiel: `?regeln set Kein Spam!`' });
                 return;
             }
@@ -38,11 +40,12 @@ module.exports = {
             rulesData[groupId] = customRules;
             saveRulesData(rulesData);
 
-            await delay(1000);
+            await delay();
             await sock.sendMessage(groupId, { text: `✅ Neue Regeln gespeichert:\n\n${customRules}` });
 
         } else if (subCommand === 'reset') {
             if (!isAdmin) {
+				await delay();
                 await sock.sendMessage(groupId, { text: '❌ Nur Gruppenadmins können die Regeln zurücksetzen.' });
                 return;
             }
@@ -50,20 +53,23 @@ module.exports = {
             delete rulesData[groupId];
             saveRulesData(rulesData);
 
-            await delay(1000);
+            await delay();
             await sock.sendMessage(groupId, { text: '♻️ Die benutzerdefinierten Regeln wurden gelöscht. Es wird nun wieder die Gruppenbeschreibung verwendet.' });
 
         } else if (subCommand === 'show') {
             const customRules = rulesData[groupId];
 
             if (customRules) {
+				await delay();
                 await sock.sendMessage(groupId, { text: `📋 *Gruppenregeln:*\n\n${customRules}` });
             } else {
                 const fallback = groupMetadata.desc || 'ℹ️ Es wurde keine Gruppenbeschreibung gesetzt.';
+				await delay();
                 await sock.sendMessage(groupId, { text: `📋 *Standard-Regeln (Gruppenbeschreibung):*\n\n${fallback}` });
             }
 
         } else {
+			await delay();
             await sock.sendMessage(groupId, {
                 text: '❗ Unbekannter Befehl. Benutze:\n\n▪️ `?regeln set [Text]`\n▪️ `?regeln show`\n▪️ `?regeln reset`'
             });

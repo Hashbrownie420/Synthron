@@ -1,6 +1,7 @@
 // commands/kickall.js
 const fs = require('fs');
 const path = require('path');
+const { delay } = require("../utils");
 
 const teamFile = path.join(__dirname, '../botTeamData.json');
 
@@ -12,6 +13,7 @@ module.exports = {
   async execute(sock, sender, args, msg) {
     const chatId = msg.key.remoteJid;
     if (!chatId.endsWith('@g.us')) {
+	  await delay();
       return sock.sendMessage(chatId, { text: '❌ Nur in Gruppen möglich!' }, { quoted: msg });
     }
 
@@ -30,6 +32,7 @@ module.exports = {
     const isGroupCreator = (groupOwner && groupOwner === senderJid);
 
     if (!isGroupCreator && senderRole !== 'Owner') {
+	  await delay();
       return sock.sendMessage(chatId, { text: '❌ Nur der Gruppenersteller oder ein Bot-Owner darf ?kickall verwenden!' }, { quoted: msg });
     }
 
@@ -37,6 +40,7 @@ module.exports = {
     const botId = sock.user.id.split(':')[0]+'@s.whatsapp.net';
     const botParticipant = meta.participants.find(p => p.id === botId);
     if (!botParticipant || !(botParticipant.admin === 'admin' || botParticipant.admin === 'superadmin')) {
+	  await delay();
       return sock.sendMessage(chatId, { text: '❌ Ich brauche Adminrechte, um alle zu kicken!' }, { quoted: msg });
     }
 
@@ -45,17 +49,14 @@ module.exports = {
       if (participant.id !== botId && participant.id !== senderJid) {
         try {
           await sock.groupParticipantsUpdate(chatId, [participant.id], 'remove');
-          await delay(300); // Kurze Pause, damit WhatsApp nicht meckert
+          await delay(); // Kurze Pause, damit WhatsApp nicht meckert
         } catch (e) {
           console.error('Fehler beim Kicken:', participant.id, e);
         }
       }
     }
 
+	await delay();
     await sock.sendMessage(chatId, { text: '✅ Alle wurden gekickt!' }, { quoted: msg });
   }
 };
-
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}

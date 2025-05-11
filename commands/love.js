@@ -10,7 +10,7 @@ module.exports = {
         const mentions = msg.message?.extendedTextMessage?.contextInfo?.mentionedJid;
 
         if (!mentions || mentions.length === 0) {
-            await delay(1000);
+            await delay();
             await sock.sendMessage(sender, { text: 'Bitte markiere eine Person für den LoveCheck!' });
             return;
         }
@@ -26,7 +26,7 @@ module.exports = {
                         percentage >= 40 ? 'Vielleicht ein gutes Team, aber braucht Arbeit! ✨' :
                         'Uff... lieber Freunde bleiben. ❄️');
 
-        await delay(1000);
+        await delay();
         await sock.sendMessage(sender, {
             text: message,
             mentions: [partnerJid]

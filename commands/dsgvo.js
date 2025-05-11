@@ -1,3 +1,5 @@
+const { delay } = require("../utils");
+
 // dsgvo.js
 module.exports = {
     name: 'dsgvo',
@@ -42,6 +44,7 @@ Diese Datenschutzerklärung kann von Zeit zu Zeit aktualisiert werden. Änderung
 Diese Datenschutzerklärung gilt ab dem Datum der Veröffentlichung und bleibt in Kraft, bis sie aktualisiert wird.
 `;
 
+		await delay();
         await sock.sendMessage(sender, {
             text: dsgvoText
         });

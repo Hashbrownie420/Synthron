@@ -10,7 +10,7 @@ module.exports = {
         const isGroup = sender.endsWith('@g.us');
         const idType = isGroup ? 'Gruppen-ID' : 'Chat-ID';
 
-        await delay(1000);
+        await delay();
         await sock.sendMessage(sender, {
             text: `🆔 *${idType}:*\n\`${sender}\`\n\nDu kannst diese ID z.B. für Log-Nachrichten nutzen.`
         });
